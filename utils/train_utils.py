@@ -8,7 +8,7 @@ the same functions can be used for:
   • Step 2 (gradient leakage attack) — computing gradients directly
 """
 
-from typing import Tuple
+from typing import List, Tuple
 
 import torch
 import torch.nn as nn
@@ -198,3 +198,39 @@ def compute_gradients(
     # Detach gradients and move back to CPU for inspection / storage
     gradients = [p.grad.detach().cpu().clone() for p in model.parameters()]
     return gradients
+
+
+def compute_attack_gradients(
+    model: nn.Module,
+    images: torch.Tensor,
+    labels: torch.Tensor,
+    device: torch.device,
+    create_graph: bool = False,
+    detach: bool = True,
+) -> List[torch.Tensor]:
+    """
+    Compute deterministic per-parameter gradients for leakage experiments.
+
+    Unlike ``compute_gradients``, this helper puts the model in eval mode before
+    the forward pass. That disables dropout, which makes gradient matching
+    stable enough for reconstruction attacks. Set ``create_graph=True`` and
+    ``detach=False`` when the returned gradients must remain differentiable.
+    """
+    model.eval()
+    model.to(device)
+    images, labels = images.to(device), labels.to(device)
+
+    model.zero_grad(set_to_none=True)
+    criterion = nn.CrossEntropyLoss()
+    outputs = model(images)
+    loss = criterion(outputs, labels)
+    gradients = torch.autograd.grad(
+        loss,
+        tuple(model.parameters()),
+        create_graph=create_graph,
+        retain_graph=create_graph,
+    )
+
+    if detach:
+        return [grad.detach().clone() for grad in gradients]
+    return list(gradients)

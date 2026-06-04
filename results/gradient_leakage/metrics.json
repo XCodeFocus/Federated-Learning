@@ -1,0 +1,52 @@
+{
+  "config": {
+    "client_id": 0,
+    "sample_index": 0,
+    "batch_size": 1,
+    "num_iterations": 300,
+    "lr": 0.1,
+    "optimizer": "lbfgs",
+    "partition": "iid",
+    "results_dir": "./results/gradient_leakage",
+    "seed": 42,
+    "num_clients": 10,
+    "num_classes_per_client": 2,
+    "data_dir": "./data",
+    "device": "auto"
+  },
+  "device": "cpu",
+  "target_labels": [
+    6
+  ],
+  "inferred_labels": [
+    6
+  ],
+  "label_inference_method": "idlg_last_bias_argmin",
+  "label_inference_correct": true,
+  "known_label": {
+    "final_gradient_loss": 0.00042487922473810613,
+    "optimizer_used": "adam",
+    "used_adam_fallback": true,
+    "mse": 0.018789051100611687,
+    "psnr": 17.260951524260413,
+    "ssim": 0.8261783123016357,
+    "initial_gradient_loss": 0.0034133463632315397
+  },
+  "inferred_label": {
+    "final_gradient_loss": 0.0004179872339591384,
+    "optimizer_used": "adam",
+    "used_adam_fallback": true,
+    "mse": 0.019489292055368423,
+    "psnr": 17.102039362559584,
+    "ssim": 0.8190593123435974,
+    "initial_gradient_loss": 0.0033119739964604378
+  },
+  "outputs": {
+    "original_batch": "results\\gradient_leakage\\original_batch.png",
+    "known_reconstruction": "results\\gradient_leakage\\reconstruction_known_label.png",
+    "inferred_reconstruction": "results\\gradient_leakage\\reconstruction_inferred_label.png",
+    "known_comparison": "results\\gradient_leakage\\comparison_known_label.png",
+    "inferred_comparison": "results\\gradient_leakage\\comparison_inferred_label.png",
+    "loss_curve": "results\\gradient_leakage\\attack_loss_curve.png"
+  }
+}
