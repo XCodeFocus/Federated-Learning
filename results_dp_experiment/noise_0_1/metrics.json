@@ -1,0 +1,40 @@
+{
+  "config": {
+    "num_clients": 5,
+    "num_rounds": 3,
+    "fraction_fit": 0.5,
+    "fraction_evaluate": 0.5,
+    "partition": "iid",
+    "num_classes_per_client": 2,
+    "data_dir": "./data",
+    "batch_size": 32,
+    "local_epochs": 2,
+    "learning_rate": 0.01,
+    "optimizer": "sgd",
+    "results_dir": "./results_dp_experiment\\noise_0_1",
+    "seed": 42,
+    "dp_enabled": true,
+    "clip_norm": 1.0,
+    "noise_multiplier": 0.1
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "avg_train_loss": 2.5039477297465007,
+      "avg_train_accuracy": 0.14008333333333334,
+      "federated_test_accuracy": 0.1006
+    },
+    {
+      "round": 2,
+      "avg_train_loss": 2.6149465049107867,
+      "avg_train_accuracy": 0.10745833333333332,
+      "federated_test_accuracy": 0.1122
+    },
+    {
+      "round": 3,
+      "avg_train_loss": 2.7168948526382444,
+      "avg_train_accuracy": 0.10895833333333334,
+      "federated_test_accuracy": 0.1135
+    }
+  ]
+}

@@ -11,7 +11,7 @@
     "local_epochs": 2,
     "learning_rate": 0.01,
     "optimizer": "sgd",
-    "results_dir": "./results",
+    "results_dir": "./results_dp_experiment\\noise_0_05",
     "seed": 42,
     "dp_enabled": true,
     "clip_norm": 1.0,
@@ -20,21 +20,21 @@
   "rounds": [
     {
       "round": 1,
-      "avg_train_loss": 1.1579853928486505,
-      "avg_train_accuracy": 0.6610416666666666,
-      "federated_test_accuracy": 0.446
+      "avg_train_loss": 1.1276459993521373,
+      "avg_train_accuracy": 0.6639999999999999,
+      "federated_test_accuracy": 0.5273
     },
     {
       "round": 2,
-      "avg_train_loss": 1.1692279332876205,
-      "avg_train_accuracy": 0.6570833333333334,
-      "federated_test_accuracy": 0.7192
+      "avg_train_loss": 1.2169275290171306,
+      "avg_train_accuracy": 0.6437916666666667,
+      "federated_test_accuracy": 0.6881
     },
     {
       "round": 3,
-      "avg_train_loss": 1.209351338704427,
-      "avg_train_accuracy": 0.6487499999999999,
-      "federated_test_accuracy": 0.8129
+      "avg_train_loss": 1.2331543080806733,
+      "avg_train_accuracy": 0.6378333333333334,
+      "federated_test_accuracy": 0.7865
     }
   ]
 }

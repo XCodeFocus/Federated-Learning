@@ -9,6 +9,7 @@ To customise:
 """
 
 import argparse
+from html import parser
 import json
 import os
 import time
@@ -57,6 +58,11 @@ CONFIG: Dict = {
     # --- Output ---
     "results_dir": "./results",
     "seed": 42,
+
+    # --- Differential Privacy (optional) ---
+    "dp_enabled": False,        
+    "clip_norm": 1.0,          
+    "noise_multiplier": 0.0,   
 }
 
 
@@ -195,6 +201,9 @@ def run_simulation(config: Dict) -> None:
         "local_epochs": config["local_epochs"],
         "learning_rate": config["learning_rate"],
         "optimizer": config["optimizer"],
+        "dp_enabled": config["dp_enabled"],
+        "clip_norm": config["clip_norm"],
+        "noise_multiplier": config["noise_multiplier"],
     }
     _client_fn = make_client_fn(
         client_datasets=client_datasets,
@@ -246,6 +255,10 @@ def parse_args():
     parser.add_argument("--fraction_fit", type=float, default=CONFIG["fraction_fit"])
     parser.add_argument("--data_dir",      type=str,   default=CONFIG["data_dir"])
     parser.add_argument("--results_dir",   type=str,   default=CONFIG["results_dir"])
+    parser.add_argument("--dp_enabled", action="store_true")
+    parser.add_argument("--clip_norm", type=float, default=CONFIG["clip_norm"])
+    parser.add_argument("--noise_multiplier", type=float, default=CONFIG["noise_multiplier"])
+    
     return parser.parse_args()
 
 

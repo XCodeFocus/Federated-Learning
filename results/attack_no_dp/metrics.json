@@ -5,14 +5,17 @@
     "batch_size": 1,
     "num_iterations": 300,
     "lr": 0.1,
-    "optimizer": "lbfgs",
+    "optimizer": "adam",
     "partition": "iid",
-    "results_dir": "./results/gradient_leakage",
+    "results_dir": "./results/attack_no_dp",
     "seed": 42,
     "num_clients": 10,
     "num_classes_per_client": 2,
     "data_dir": "./data",
-    "device": "auto"
+    "device": "auto",
+    "dp_enabled": false,
+    "clip_norm": 1.0,
+    "noise_multiplier": 0.0
   },
   "device": "cpu",
   "target_labels": [
@@ -26,7 +29,7 @@
   "known_label": {
     "final_gradient_loss": 0.0004251150239724666,
     "optimizer_used": "adam",
-    "used_adam_fallback": true,
+    "used_adam_fallback": false,
     "mse": 0.02074773609638214,
     "psnr": 16.830292847103543,
     "ssim": 0.803238034248352,
@@ -35,18 +38,18 @@
   "inferred_label": {
     "final_gradient_loss": 0.0008111601346172392,
     "optimizer_used": "adam",
-    "used_adam_fallback": true,
+    "used_adam_fallback": false,
     "mse": 0.03925924375653267,
     "psnr": 14.060580703887911,
     "ssim": 0.6542152166366577,
     "initial_gradient_loss": 0.003311972599476576
   },
   "outputs": {
-    "original_batch": "results\\gradient_leakage\\original_batch.png",
-    "known_reconstruction": "results\\gradient_leakage\\reconstruction_known_label.png",
-    "inferred_reconstruction": "results\\gradient_leakage\\reconstruction_inferred_label.png",
-    "known_comparison": "results\\gradient_leakage\\comparison_known_label.png",
-    "inferred_comparison": "results\\gradient_leakage\\comparison_inferred_label.png",
-    "loss_curve": "results\\gradient_leakage\\attack_loss_curve.png"
+    "original_batch": "results\\attack_no_dp\\original_batch.png",
+    "known_reconstruction": "results\\attack_no_dp\\reconstruction_known_label.png",
+    "inferred_reconstruction": "results\\attack_no_dp\\reconstruction_inferred_label.png",
+    "known_comparison": "results\\attack_no_dp\\comparison_known_label.png",
+    "inferred_comparison": "results\\attack_no_dp\\comparison_inferred_label.png",
+    "loss_curve": "results\\attack_no_dp\\attack_loss_curve.png"
   }
 }

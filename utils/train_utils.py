@@ -13,6 +13,7 @@ from typing import List, Tuple
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
+from torch.nn.utils import clip_grad_norm_
 
 
 # ---------------------------------------------------------------------------
@@ -25,6 +26,9 @@ def train_one_epoch(
     optimizer: torch.optim.Optimizer,
     criterion: nn.Module,
     device: torch.device,
+    dp_enabled: bool = False,
+    clip_norm: float = 1.0,
+    noise_multiplier: float = 0.0,
 ) -> Tuple[float, float]:
     """
     Run a single epoch of local SGD on `model`.
@@ -55,6 +59,11 @@ def train_one_epoch(
         outputs = model(images)            # forward pass → logits
         loss = criterion(outputs, labels)  # compute cross-entropy loss
         loss.backward()                    # backprop → fill .grad on params
+
+        if dp_enabled:
+            apply_dp_to_gradients(model, clip_norm=clip_norm, noise_multiplier=noise_multiplier)
+
+
         optimizer.step()                   # update weights
 
         # --- bookkeeping ---
@@ -75,6 +84,9 @@ def local_train(
     learning_rate: float,
     device: torch.device,
     optimizer_name: str = "sgd",
+    dp_enabled: bool = False,
+    clip_norm: float = 1.0,
+    noise_multiplier: float = 0.0,
 ) -> Tuple[float, float, int]:
     """
     Train `model` locally for `num_epochs` epochs.
@@ -105,7 +117,7 @@ def local_train(
         )
 
     for epoch in range(num_epochs):
-        loss, acc = train_one_epoch(model, dataloader, optimizer, criterion, device)
+        loss, acc = train_one_epoch(model, dataloader, optimizer, criterion, device, dp_enabled=dp_enabled, clip_norm=clip_norm, noise_multiplier=noise_multiplier)
 
     num_examples = len(dataloader.dataset)
     return loss, acc, num_examples
@@ -234,3 +246,19 @@ def compute_attack_gradients(
     if detach:
         return [grad.detach().clone() for grad in gradients]
     return list(gradients)
+
+def apply_dp_to_gradients(model, clip_norm, noise_multiplier):
+    #clip
+    clip_grad_norm_(model.parameters(), max_norm=clip_norm)
+    #add noise
+    for param in model.parameters():
+        if param.grad is None:
+            continue
+        noise = torch.normal(
+            mean=0.0, 
+            std=noise_multiplier * clip_norm, 
+            size=param.grad.shape,
+            device=param.grad.device
+        )
+        param.grad += noise
+            

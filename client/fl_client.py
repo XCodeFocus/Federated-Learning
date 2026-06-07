@@ -128,6 +128,11 @@ class MNISTFlowerClient(flwr.client.NumPyClient):
         lr = self.config.get("learning_rate", 0.01)
         opt = self.config.get("optimizer", "sgd")
 
+        # DP hyperparameters (optional)
+        dp_enabled = self.config.get("dp_enabled", False)
+        clip_norm = self.config.get("clip_norm", 1.0)
+        noise_multiplier = self.config.get("noise_multiplier", 0.0)
+
         loss, acc, n_examples = local_train(
             model=self.model,
             dataloader=train_loader,
@@ -135,6 +140,9 @@ class MNISTFlowerClient(flwr.client.NumPyClient):
             learning_rate=lr,
             device=self.device,
             optimizer_name=opt,
+            dp_enabled=dp_enabled,
+            clip_norm=clip_norm,
+            noise_multiplier=noise_multiplier,
         )
 
         print(

@@ -9,6 +9,7 @@ from the raw gradients that a federated server could observe in a toy setup.
 from __future__ import annotations
 
 import argparse
+from html import parser
 import json
 import math
 import random
@@ -41,6 +42,34 @@ IMAGE_SHAPE = (1, 28, 28)
 NUM_CLASSES = 10
 NORMALIZED_PIXEL_MIN = (0.0 - MNIST_MEAN) / MNIST_STD
 NORMALIZED_PIXEL_MAX = (1.0 - MNIST_MEAN) / MNIST_STD
+
+def apply_dp_to_gradient_list(
+    gradients,
+    clip_norm=1.0,
+    noise_multiplier=0.0,
+):
+    total_norm = torch.sqrt(
+        sum(torch.sum(g ** 2) for g in gradients)
+    )
+
+    clip_coef = clip_norm / (total_norm + 1e-6)
+    clip_coef = min(1.0, clip_coef.item())
+
+    dp_gradients = []
+
+    for g in gradients:
+        clipped_g = g * clip_coef
+
+        noise = torch.normal(
+            mean=0.0,
+            std=noise_multiplier * clip_norm,
+            size=g.shape,
+            device=g.device,
+        )
+
+        dp_gradients.append(clipped_g + noise)
+
+    return dp_gradients
 
 
 def seed_everything(seed: int) -> None:
@@ -501,6 +530,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--num_classes_per_client", type=int, default=2)
     parser.add_argument("--data_dir", type=str, default="./data")
     parser.add_argument("--device", type=str, default="auto", choices=["auto", "cpu", "cuda"])
+    parser.add_argument("--dp_enabled", action="store_true")
+    parser.add_argument("--clip_norm", type=float, default=1.0)
+    parser.add_argument("--noise_multiplier", type=float, default=0.0)
     return parser.parse_args()
 
 
@@ -536,6 +568,19 @@ def main() -> None:
         create_graph=False,
         detach=True,
     )
+
+    if args.dp_enabled:
+        target_gradients = apply_dp_to_gradient_list(
+            target_gradients,
+            clip_norm=args.clip_norm,
+            noise_multiplier=args.noise_multiplier,
+        )
+
+        print(
+            f"[DP] Applied gradient clipping and Gaussian noise: "
+            f"clip_norm={args.clip_norm}, "
+            f"noise_multiplier={args.noise_multiplier}"
+        )
 
     print(
         "[Attack] Target labels: "

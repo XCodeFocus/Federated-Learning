@@ -1,0 +1,55 @@
+{
+  "config": {
+    "client_id": 0,
+    "sample_index": 0,
+    "batch_size": 1,
+    "num_iterations": 300,
+    "lr": 0.1,
+    "optimizer": "adam",
+    "partition": "iid",
+    "results_dir": "./results/attack_dp_005",
+    "seed": 42,
+    "num_clients": 10,
+    "num_classes_per_client": 2,
+    "data_dir": "./data",
+    "device": "auto",
+    "dp_enabled": true,
+    "clip_norm": 1.0,
+    "noise_multiplier": 0.05
+  },
+  "device": "cpu",
+  "target_labels": [
+    6
+  ],
+  "inferred_labels": [
+    6
+  ],
+  "label_inference_method": "idlg_last_bias_argmin",
+  "label_inference_correct": true,
+  "known_label": {
+    "final_gradient_loss": 0.06662321090698242,
+    "optimizer_used": "adam",
+    "used_adam_fallback": false,
+    "mse": 0.41016659140586853,
+    "psnr": 3.8703971636881924,
+    "ssim": -0.028164805844426155,
+    "initial_gradient_loss": 0.0855419784784317
+  },
+  "inferred_label": {
+    "final_gradient_loss": 0.06566857546567917,
+    "optimizer_used": "adam",
+    "used_adam_fallback": false,
+    "mse": 0.4137216806411743,
+    "psnr": 3.832917197713725,
+    "ssim": -0.007943620905280113,
+    "initial_gradient_loss": 0.08565118908882141
+  },
+  "outputs": {
+    "original_batch": "results\\attack_dp_005\\original_batch.png",
+    "known_reconstruction": "results\\attack_dp_005\\reconstruction_known_label.png",
+    "inferred_reconstruction": "results\\attack_dp_005\\reconstruction_inferred_label.png",
+    "known_comparison": "results\\attack_dp_005\\comparison_known_label.png",
+    "inferred_comparison": "results\\attack_dp_005\\comparison_inferred_label.png",
+    "loss_curve": "results\\attack_dp_005\\attack_loss_curve.png"
+  }
+}
